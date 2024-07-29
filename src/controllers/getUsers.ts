@@ -19,4 +19,26 @@ export const getSingleUser = async (req: AuthRequest, res: Response) => {
    }
 }
 
+export const getAllUsers = async (req: AuthRequest, res: Response) => {
+  try {
+     const users = await User.find()
+     if (!users.length) {
+       return res.status(404).json({
+         status: false,
+         message: "No users found",
+       });
+     }
+
+     return res.status(200).json({ status: true, data: users });
+  } catch (err: unknown) {
+    return res
+      .status(500)
+      .json({
+        status: false,
+        message: "Internal server error" + (err as Error).message,
+      });
+  }
+};
+
+
 

@@ -51,8 +51,11 @@ export const deleteTask = async (req: AuthRequest, res: Response) => {
   try {
     const task = await Task.findOneAndDelete({
       _id: req.params.id,
-      userId: (req.user as ITask).id,
+      ...((req.user as ITask).role !== "admin" && {
+        userId: (req.user as ITask).id,
+      }),
     })
+
     if (!task) {
       return res.status(404).send({ error: "Task not found" })
     }
